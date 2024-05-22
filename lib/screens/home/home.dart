@@ -9,25 +9,33 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final AuthService authService = new AuthService();
+  final AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
-    final signOut = Material(
-      child: MaterialButton(
-        onPressed: () async {
-          await authService.signOut();
-        },
-        child: Text("Ke Halaman Login"),
+    final signOutButton = ElevatedButton(
+      onPressed: () async {
+        await authService.signOut();
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color.fromARGB(255, 118, 135, 143),
+        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+      ),
+      child: Text(
+        "Login Page",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+        ),
       ),
     );
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home Page"),
+        title: Text(" "),
       ),
       body: Center(
-        child: signOut,
+        child: signOutButton,
       ),
     );
   }
