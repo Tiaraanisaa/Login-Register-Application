@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/models/login_user.dart';
 import 'package:flutter_project/services/auth.dart';
+import 'package:lottie/lottie.dart';
 
 class Login extends StatefulWidget {
   final Function? toggleView;
@@ -14,6 +15,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _showHide = true;
+  bool _showAnimation = false;
 
   final _email = TextEditingController();
   final _password = TextEditingController();
@@ -86,13 +88,31 @@ class _LoginState extends State<Login> {
                 );
               });
         } else {
+          setState(() {
+            _showAnimation = true;
+          });
           showDialog(
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  content: Text('Logged in as Anonymous. UID: ${result.uid}'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Lottie.asset('assets/animation/checkmark2.json'),
+                      SizedBox(
+                        height: 5,
+                        width: 5,
+                      ),
+                      Text('Logged in as Anonymous. UID: ${result.uid}'),
+                    ],
+                  ),
                 );
-              });
+              }).then((_) async {
+            await Future.delayed(Duration(seconds: 1));
+            setState(() {
+              _showAnimation = false;
+            });
+          });
         }
       },
       style: ElevatedButton.styleFrom(
@@ -123,13 +143,31 @@ class _LoginState extends State<Login> {
                   );
                 });
           } else {
+            setState(() {
+              _showAnimation = true;
+            });
             showDialog(
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    content: Text('Login Successfully! UID: ${result.uid}'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Lottie.asset('assets/animation/checkmark2.json'),
+                        SizedBox(
+                          height: 5,
+                          width: 5,
+                        ),
+                        Text('Login Successfully! UID: ${result.uid}'),
+                      ],
+                    ),
                   );
-                });
+                }).then((_) async {
+              await Future.delayed(Duration(seconds: 1));
+              setState(() {
+                _showAnimation = false;
+              });
+            });
           }
         }
       },
@@ -153,9 +191,14 @@ class _LoginState extends State<Login> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          if (_showAnimation)
+            Center(
+              child: Lottie.asset('assets/animation/checkmark.json'),
+            ),
           Text(
             'LOGIN',
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            style:
+                TextStyle(height: 3, fontSize: 40, fontWeight: FontWeight.bold),
           ),
           Form(
               key: _globalKey,
@@ -167,19 +210,19 @@ class _LoginState extends State<Login> {
                   children: [
                     emailField,
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     passwordField,
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     txtButton,
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     loginAnonymousButton,
                     SizedBox(
-                      height: 20,
+                      height: 10,
                     ),
                     loginEmailPasswordButton
                   ],

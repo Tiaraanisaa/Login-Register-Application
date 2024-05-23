@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/services/auth.dart';
 import 'package:flutter_project/models/login_user.dart';
+import 'package:lottie/lottie.dart';
 
 class Register extends StatefulWidget {
   final Function? toggleView;
@@ -13,6 +14,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   bool _showHide = true;
+  bool _showAnimation = false;
 
   final _email = TextEditingController();
   final _password = TextEditingController();
@@ -89,14 +91,31 @@ class _RegisterState extends State<Register> {
               },
             );
           } else {
+            setState(() {
+              _showAnimation = true;
+            });
             showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  content: Text('Registered Successfully! UID: ${result.uid}'),
-                );
-              },
-            );
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Lottie.asset('assets/animation/checkmark2.json'),
+                        SizedBox(
+                          height: 5,
+                          width: 5,
+                        ),
+                        Text('Registered Successfully! UID: ${result.uid}'),
+                      ],
+                    ),
+                  );
+                }).then((_) async {
+              await Future.delayed(Duration(seconds: 1));
+              setState(() {
+                _showAnimation = false;
+              });
+            });
           }
         }
       },
@@ -122,7 +141,8 @@ class _RegisterState extends State<Register> {
         children: [
           Text(
             'REGISTER',
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            style:
+                TextStyle(height: 3, fontSize: 40, fontWeight: FontWeight.bold),
           ),
           Form(
             key: _globalKey,
@@ -133,11 +153,11 @@ class _RegisterState extends State<Register> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   emailField,
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   passwordField,
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   txtButton,
-                  SizedBox(height: 20),
+                  SizedBox(height: 8),
                   registerEmailPasswordButton,
                 ],
               ),
